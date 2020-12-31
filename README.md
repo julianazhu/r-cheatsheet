@@ -49,9 +49,47 @@ We are going to use the made up `sample-data` dataset.
 # View the Data
 sample-data
 
+# First line
+first(sample-data)
+
 # Dimensions
 dim(sample-data)
 
+# Column Names
+names(sample-data)
+
 # View a column
 sample-data$column-name
+```
+
+### Summarising Data
+Range
+```
+range(sample-data$column-name)
+```
+
+### Visualising Data
+Scatter Plot
+```
+ggplot(data = sample-data, aes(x = column-name-a, y = column-name-b)) +
+  geom_point() 
+  # + geom_line() will add a line plot
+```
+
+
+## Manipulating Data
+* Assignment operator `<-`
+* Piping operator `%>%`
+
+### Adding Variables
+Adds a new column called `output-column-name` to `sample-data`
+```
+sample-data <- sample-data %>%
+  mutate(output-column-name = column-name-a + column-name-b)
+```
+
+### Rearrange Data
+Arrange a column in descending order
+```
+sample-data <- sample-data %>% arrange(desc(column-name))
 ```
