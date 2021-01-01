@@ -1,6 +1,10 @@
 # r-cheatsheet
 Cheatsheet for R &amp; Rstudio
 
+```
+?<anything-here> # Help/manual for that thing
+```
+
 ## Packages
 Install packages once from [CRAN](https://cran.r-project.org)/[Bioconductor](https://www.bioconductor.org)/[devtools](https://www.rstudio.com/products/rpackages/devtools/)
 ```
@@ -58,28 +62,107 @@ dim(sample-data)
 # Column Names
 names(sample-data)
 
+# Column Structure & Data Type
+str(sample-data)
+
 # View a column
 sample-data$column-name
+
+# Take a Sample (dplyr)
+sample_n(sample-data)
 ```
 
 ### Summarising Data
-Range
+
+* Sample Size - `n()`
+
+  Measures of Centre:
+* Mean - `mean()`
+* Median - `median`
+* Mode:
 ```
-range(sample-data$column-name)
+getmode <- function(v) {
+   uniqv <- unique(v)
+   uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+
+result <- getmode(vector)
+print(result)
 ```
 
+Measures of Spread:
+* Range - `range()`
+* Minimum - `min()`
+* Maximum - `max()`
+* Standard Deviation - `sd()`
+* Variance - `var()`
+* IQR - `IQR()`
+  
+
+Create a list of summary metrics
+```
+# Dplyr function
+sample-data %>%
+summarise(mean_dd = mean(column-name), sd_dd = sd(column-name), n = n())
+```
+
+### Selecting & Grouping Data
+Select Top n
+```
+head(n)
+```
+
+Filter
+```
+# Dplyr function 
+
+# AND
+new-data-frame <- sample-data %>%
+  filter(column-name-a == "text", column-name-b == 999)
+
+# OR  
+new-data-frame <- sample-data %>%
+  filter(column-name-a == "text" | column-name-b == 999)
+```
+Select
+```
+new-data-frame <- sample-data %>%
+  select(column-name-a, column-name-b)
+```
+Group
+```
+sample-data %>%
+  group_by(column-name-a) %>%
+  summarise(mean = mean(column-name-b), sd = sd(column-name-b), n = n())
+  ```
+
 ### Visualising Data
-Scatter Plot
+We use the `ggplot2` package for visualisation
+
+Example Scatter Plot
 ```
 ggplot(data = sample-data, aes(x = column-name-a, y = column-name-b)) +
   geom_point() 
-  # + geom_line() will add a line plot
 ```
 
+* Scatter Plot - `geom_point()`
+* Line Plot - `geom_line()`
+* Histogram -`geom_histogram()` or `stat_bin()`
+    * Args: # bins: `bins`, bin width: `binwidth`
+* Box Plot - `geom_boxplot()`
+    * Requires categorical variable on the x axis, so `factor()` if variable is not already factor type.
+* Bar Chart - `geom_bar()`
+    * Stacked Bar Chart: `aes(fill = column-name-a)`
 
 ## Manipulating Data
+Standard Operators:
 * Assignment operator `<-`
 * Piping operator `%>%`
+
+Many of the data manipulation verbs in this section come from the `dplyr` package.
+* arrange()
+* distinct()
+* mutate()
 
 ### Adding Variables
 Adds a new column called `output-column-name` to `sample-data`
@@ -93,3 +176,6 @@ Arrange a column in descending order
 ```
 sample-data <- sample-data %>% arrange(desc(column-name))
 ```
+
+### Feature Engineering 
+* Ternary If/Else - `ifelse(column-name < 1, "FOO", "BAR"))`
