@@ -65,6 +65,11 @@ names(sample-data)
 # Column Structure & Data Type
 str(sample-data)
 
+# Investigate the structure of specific columns
+sample-data %>% 
+  select(column-name, column-b-name) %>% 
+  str()
+
 # View a column
 sample-data$column-name
 
@@ -73,12 +78,19 @@ sample_n(sample-data)
 ```
 
 ### Summarising Data
+View as a table:
+```
+table(object/list)
+```
 
+Sample Size:
 * Sample Size - `n()`
 
-  Measures of Centre:
+Measures of Centre:
+
+_(Often has option to exclude null values by setting argument "na.rm = TRUE")_
 * Mean - `mean()`
-* Median - `median`
+* Median - `median()`
 * Mode:
 ```
 getmode <- function(v) {
@@ -106,6 +118,13 @@ sample-data %>%
 summarise(mean_dd = mean(column-name), sd_dd = sd(column-name), n = n())
 ```
 
+Tabulate Categorical Data:
+```
+sample-data %>% 
+  group_by(column-name) %>% 
+  summarise(count = n())
+```
+
 ### Selecting & Grouping Data
 Select Top n
 ```
@@ -115,7 +134,6 @@ head(n)
 Filter
 ```
 # Dplyr function 
-
 # AND
 new-data-frame <- sample-data %>%
   filter(column-name-a == "text", column-name-b == 999)
@@ -123,6 +141,10 @@ new-data-frame <- sample-data %>%
 # OR  
 new-data-frame <- sample-data %>%
   filter(column-name-a == "text" | column-name-b == 999)
+
+# Null values
+new-data-frame <- sample-data %>%
+  filter(!is.na(column-name))
 ```
 Select
 ```
@@ -177,5 +199,20 @@ Arrange a column in descending order
 sample-data <- sample-data %>% arrange(desc(column-name))
 ```
 
+### Change data types
+Change a factor type column into numeric data type (via character data type).
+_(Often useful for ordinal categorical variables)_
+```
+sample-data <- sample-data %>%
+  mutate(output-column-name = as.numeric(as.character(column-name)))
+```
+
 ### Feature Engineering 
 * Ternary If/Else - `ifelse(column-name < 1, "FOO", "BAR"))`
+
+## Simulations
+Sampling 
+```
+coin_outcomes <- c("heads", "tails")  #c() - combine values into vector/list
+sim_unfair_coin <- sample(coin_outcomes, size = 1000, replace = TRUE, prob = c(0.2, 0.8))
+```
